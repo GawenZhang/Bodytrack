@@ -1,0 +1,671 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block head %}
+    <style>
+        :root {
+            --primary: #FFD700;
+            --primary-dark: #DAA520;
+            --primary-light: #FFF8DC;
+            --accent: #FFB700;
+            --text: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: transparent;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .report-section {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--primary);
+            margin-bottom: 2rem;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .report-date {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: var(--primary-light);
+            border-radius: 8px;
+        }
+
+        .user-info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-info-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .user-info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background-color: var(--primary-light);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 0.5rem 0;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .progress-section {
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin: 0.5rem 0 1rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent);
+            border-radius: 5px;
+        }
+
+        .progress-stats {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .chart-container {
+            height: 300px;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .chart-bar {
+            position: absolute;
+            bottom: 30px;
+            width: 40px;
+            background-color: var(--primary);
+            border-radius: 5px 5px 0 0;
+        }
+
+        .chart-label {
+            position: absolute;
+            bottom: 0;
+            width: 40px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        .chart-axis {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #ddd;
+        }
+
+        .chart-y-label {
+            position: absolute;
+            transform: rotate(-90deg);
+            left: -40px;
+            top: 50%;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .recommendations {
+            background-color: var(--primary-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .recommendation-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .recommendation-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: var(--text);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+
+{#    这里开始#}
+
+<div class="container">
+        <div class="header">
+            <h1>Your Personalized Fitness Report</h1>
+            <p>Based on your data, we've generated a comprehensive fitness analysis</p>
+        </div>
+
+        <div class="report-section">
+            <div class="report-header">
+                <h2>Fitness Analysis Report</h2>
+                <div class="report-date">Generated: <span id="current-date"></span></div>
+            </div>
+
+            <div class="user-info" id="user-info-container">
+                <!-- Will be filled by JavaScript -->
+            </div>
+
+            <h3>Fitness Metrics</h3>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Body Mass Index (BMI)</div>
+                    <div class="metric-value" id="bmi-value">--</div>
+                    <div class="metric-label" id="bmi-category">--</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">Basal Metabolic Rate</div>
+                    <div class="metric-value" id="bmr-value">--</div>
+                    <div class="metric-label">calories/day</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">Body Fat % (estimated)</div>
+                    <div class="metric-value" id="bodyfat-value">--</div>
+                    <div class="metric-label" id="bodyfat-category">--</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">Daily Calorie Needs</div>
+                    <div class="metric-value" id="calorie-value">--</div>
+                    <div class="metric-label">with your activity level</div>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <h3>Goal Projections</h3>
+                <p>Based on your current metrics and goal selection</p>
+
+                <div>
+                    <div class="progress-label" id="goal-label">Progress Towards Goal</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="goal-progress-bar"></div>
+                    </div>
+                    <div class="progress-stats" id="goal-progress-text"></div>
+                </div>
+            </div>
+
+            <div>
+                <h3>Projected Progress</h3>
+                <div class="chart-container">
+                    <div class="chart-y-label">Progress</div>
+                    <div class="chart-axis"></div>
+                    <div class="chart-bar" id="month1-bar"></div>
+                    <div class="chart-label" id="month1-label">Month 1</div>
+
+                    <div class="chart-bar" id="month2-bar"></div>
+                    <div class="chart-label" id="month2-label">Month 2</div>
+
+                    <div class="chart-bar" id="month3-bar"></div>
+                    <div class="chart-label" id="month3-label">Month 3</div>
+
+                    <div class="chart-bar" id="month4-bar"></div>
+                    <div class="chart-label" id="month4-label">Month 4</div>
+                </div>
+            </div>
+
+            <div class="recommendations">
+                <h3>Personalized Recommendations</h3>
+                <p>Based on your data analysis, we recommend:</p>
+                <div id="recommendations-container">
+                    <!-- Will be filled by JavaScript -->
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button type="button" id="back-button">Return to Data Form</button>
+                <button type="button" id="print-button">Print Report</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date
+            const currentDate = new Date();
+            document.getElementById('current-date').textContent = currentDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Get user data from localStorage
+            const userDataString = localStorage.getItem('fitnessUserData');
+
+            if (!userDataString) {
+                alert('No user data found. Please fill out the form first.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const userData = JSON.parse(userDataString);
+
+            // Populate user info section
+            const userInfoContainer = document.getElementById('user-info-container');
+            userInfoContainer.innerHTML = `
+                <div class="user-info-item">
+                    <span class="user-info-label">Name</span>
+                    <span class="user-info-value">${userData.name}</span>
+                </div>
+                <div class="user-info-item">
+                    <span class="user-info-label">Age</span>
+                    <span class="user-info-value">${userData.age} years</span>
+                </div>
+                <div class="user-info-item">
+                    <span class="user-info-label">Height</span>
+                    <span class="user-info-value">${userData.height} cm</span>
+                </div>
+                <div class="user-info-item">
+                    <span class="user-info-label">Weight</span>
+                    <span class="user-info-value">${userData.weight} kg</span>
+                </div>
+                <div class="user-info-item">
+                    <span class="user-info-label">Gender</span>
+                    <span class="user-info-value">${userData.gender.charAt(0).toUpperCase() + userData.gender.slice(1)}</span>
+                </div>
+                <div class="user-info-item">
+                    <span class="user-info-label">Goal</span>
+                    <span class="user-info-value">${formatGoal(userData.goal)}</span>
+                </div>
+            `;
+
+            // Calculate metrics
+            const height = parseInt(userData.height);
+            const weight = parseInt(userData.weight);
+            const age = parseInt(userData.age);
+            const gender = userData.gender;
+            const activities = parseFloat(userData.activities) || 0;
+
+            // Calculate BMI
+            const heightInMeters = height / 100;
+            const bmi = weight / (heightInMeters * heightInMeters);
+            document.getElementById('bmi-value').textContent = bmi.toFixed(1);
+
+            // Set BMI category
+            let bmiCategory;
+            if (bmi < 18.5) bmiCategory = "Underweight";
+            else if (bmi < 25) bmiCategory = "Normal weight";
+            else if (bmi < 30) bmiCategory = "Overweight";
+            else bmiCategory = "Obesity";
+            document.getElementById('bmi-category').textContent = bmiCategory;
+
+            // Calculate BMR using Mifflin-St Jeor Equation
+            let bmr;
+            if (gender === 'male') {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            } else {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            }
+            document.getElementById('bmr-value').textContent = Math.round(bmr);
+
+            // Estimate body fat percentage
+            let bodyFat;
+            if (gender === 'male') {
+                bodyFat = 1.20 * bmi + 0.23 * age - 16.2;
+            } else {
+                bodyFat = 1.20 * bmi + 0.23 * age - 5.4;
+            }
+
+            // Ensure body fat is within reasonable limits
+            bodyFat = Math.max(5, Math.min(45, bodyFat));
+            document.getElementById('bodyfat-value').textContent = bodyFat.toFixed(1) + "%";
+
+            // Set body fat category
+            let bodyFatCategory;
+            if (gender === 'male') {
+                if (bodyFat < 10) bodyFatCategory = "Very Low";
+                else if (bodyFat < 14) bodyFatCategory = "Athletic";
+                else if (bodyFat < 21) bodyFatCategory = "Fitness";
+                else if (bodyFat < 25) bodyFatCategory = "Average";
+                else bodyFatCategory = "Above Average";
+            } else {
+                if (bodyFat < 18) bodyFatCategory = "Very Low";
+                else if (bodyFat < 22) bodyFatCategory = "Athletic";
+                else if (bodyFat < 29) bodyFatCategory = "Fitness";
+                else if (bodyFat < 33) bodyFatCategory = "Average";
+                else bodyFatCategory = "Above Average";
+            }
+            document.getElementById('bodyfat-category').textContent = bodyFatCategory;
+
+            // Calculate daily calorie needs based on activity level
+            let activityMultiplier;
+            if (activities < 1) activityMultiplier = 1.2; // Sedentary
+            else if (activities < 3) activityMultiplier = 1.375; // Light activity
+            else if (activities < 5) activityMultiplier = 1.55; // Moderate activity
+            else if (activities < 7) activityMultiplier = 1.725; // Very active
+            else activityMultiplier = 1.9; // Extra active
+
+            const dailyCalories = Math.round(bmr * activityMultiplier);
+            document.getElementById('calorie-value').textContent = dailyCalories;
+
+            // Set goal progress based on user's goal
+            const goal = userData.goal;
+            let progressPercentage, progressText;
+
+            switch(goal) {
+                case 'weight-loss':
+                    progressPercentage = Math.min(100, Math.max(0, 100 - ((bmi - 22) * 10)));
+                    document.getElementById('goal-label').textContent = "Weight Loss Progress";
+                    break;
+                case 'muscle-gain':
+                    const idealBodyFat = gender === 'male' ? 15 : 22;
+                    const bodyfatDiff = Math.abs(bodyFat - idealBodyFat);
+                    progressPercentage = Math.min(100, Math.max(0, 100 - (bodyfatDiff * 5)));
+                    document.getElementById('goal-label').textContent = "Muscle Gain Potential";
+                    break;
+                case 'endurance':
+                    progressPercentage = Math.min(100, Math.max(0, activities * 15));
+                    document.getElementById('goal-label').textContent = "Endurance Development";
+                    break;
+                case 'flexibility':
+                    progressPercentage = 60;
+                    document.getElementById('goal-label').textContent = "Flexibility Training Progress";
+                    break;
+                default:
+                    progressPercentage = Math.min(100, Math.max(0, 100 - ((Math.abs(bmi - 22) * 5) + (Math.abs(activities - 5) * 10))));
+                    document.getElementById('goal-label').textContent = "General Health Progress";
+            }
+
+            document.getElementById('goal-progress-bar').style.width = `${progressPercentage}%`;
+            document.getElementById('goal-progress-text').textContent = `${Math.round(progressPercentage)}% Progress`;
+
+            // Set up chart bars
+            setupProjectionChart(goal, gender, bmi, bodyFat, activities);
+
+            // Generate recommendations
+            generateRecommendations(goal, gender, bmi, bodyFat, activities, userData.diet);
+
+            // Set up button handlers
+            document.getElementById('back-button').addEventListener('click', function() {
+                window.location.href = 'index.html';
+            });
+
+            document.getElementById('print-button').addEventListener('click', function() {
+                window.print();
+            });
+        });
+
+        function formatGoal(goal) {
+            const goals = {
+                'weight-loss': 'Weight Loss',
+                'muscle-gain': 'Muscle Gain',
+                'endurance': 'Improve Endurance',
+                'flexibility': 'Improve Flexibility',
+                'general': 'General Health'
+            };
+            return goals[goal] || goal;
+        }
+
+        function setupProjectionChart(goal, gender, bmi, bodyFat, activities) {
+            let month1 = 25;
+            let month2 = 50;
+            let month3 = 70;
+            let month4 = 85;
+
+            switch(goal) {
+                case 'weight-loss':
+                    month1 = 35;
+                    break;
+                case 'muscle-gain':
+                    month1 = 20;
+                    month2 = 45;
+                    break;
+                case 'endurance':
+                    month1 = 30;
+                    month2 = 55;
+                    month3 = 75;
+                    break;
+            }
+
+            if (activities < 3) {
+                month1 *= 0.8;
+                month2 *= 0.85;
+                month3 *= 0.9;
+                month4 *= 0.95;
+            } else if (activities > 5) {
+                month1 = Math.min(100, month1 * 1.2);
+                month2 = Math.min(100, month2 * 1.15);
+                month3 = Math.min(100, month3 * 1.1);
+                month4 = Math.min(100, month4 * 1.05);
+            }
+
+            const maxHeight = 240;
+            document.getElementById('month1-bar').style.height = `${(month1/100) * maxHeight}px`;
+            document.getElementById('month1-bar').style.left = '80px';
+            document.getElementById('month1-label').style.left = '80px';
+
+            document.getElementById('month2-bar').style.height = `${(month2/100) * maxHeight}px`;
+            document.getElementById('month2-bar').style.left = '180px';
+            document.getElementById('month2-label').style.left = '180px';
+
+            document.getElementById('month3-bar').style.height = `${(month3/100) * maxHeight}px`;
+            document.getElementById('month3-bar').style.left = '280px';
+            document.getElementById('month3-label').style.left = '280px';
+
+            document.getElementById('month4-bar').style.height = `${(month4/100) * maxHeight}px`;
+            document.getElementById('month4-bar').style.left = '380px';
+            document.getElementById('month4-label').style.left = '380px';
+        }
+
+        function generateRecommendations(goal, gender, bmi, bodyFat, activities, diet) {
+            const recommendationsContainer = document.getElementById('recommendations-container');
+            let recommendations = [];
+
+            // Exercise recommendations based on goal
+            switch(goal) {
+                case 'weight-loss':
+                    recommendations.push({
+                        category: 'Cardio Exercise',
+                        text: 'Incorporate 30-45 minutes of moderate to high-intensity cardio 4-5 times per week. Mix steady-state cardio with HIIT sessions for optimal fat burning.'
+                    });
+                    recommendations.push({
+                        category: 'Strength Training',
+                        text: 'Include 2-3 sessions of full-body strength training per week to preserve muscle mass during weight loss.'
+                    });
+                    break;
+
+                case 'muscle-gain':
+                    recommendations.push({
+                        category: 'Strength Training',
+                        text: 'Focus on progressive overload with 4-5 strength training sessions per week. Split routines targeting different muscle groups are ideal.'
+                    });
+                    recommendations.push({
+                        category: 'Recovery',
+                        text: 'Ensure 48-72 hours of recovery between training the same muscle groups. Quality sleep is essential for muscle growth.'
+                    });
+                    break;
+
+                case 'endurance':
+                    recommendations.push({
+                        category: 'Cardio Training',
+                        text: 'Build a base with 3-4 sessions of longer, lower-intensity cardio per week. Gradually increase duration before adding intensity.'
+                    });
+                    recommendations.push({
+                        category: 'Cross Training',
+                        text: 'Incorporate cross-training to develop all energy systems and prevent overuse injuries.'
+                    });
+                    break;
+
+                case 'flexibility':
+                    recommendations.push({
+                        category: 'Stretching Routine',
+                        text: 'Dedicate 15-20 minutes daily to static stretching, focusing on major muscle groups. Hold each stretch for 30-60 seconds.'
+                    });
+                    recommendations.push({
+                        category: 'Movement Practices',
+                        text: 'Add yoga or pilates 2-3 times weekly to improve both flexibility and core strength.'
+                    });
+                    break;
+
+                default: // General health
+                    recommendations.push({
+                        category: 'Balanced Exercise',
+                        text: 'Aim for 150 minutes of moderate aerobic activity or 75 minutes of vigorous activity per week, plus 2 strength training sessions.'
+                    });
+                    recommendations.push({
+                        category: 'Daily Activity',
+                        text: 'Increase daily steps to 7,000-10,000 to support overall health and energy levels.'
+                    });
+            }
+
+            // Diet recommendations based on goal and metrics
+            if (bmi > 25 || goal === 'weight-loss') {
+                recommendations.push({
+                    category: 'Nutrition',
+                    text: 'Maintain a calorie deficit of 300-500 calories daily. Focus on high-protein foods (1.6-2.2g/kg body weight) and complex carbs.'
+                });
+            } else if (goal === 'muscle-gain') {
+                recommendations.push({
+                    category: 'Nutrition',
+                    text: 'Increase calorie intake by 250-500 calories daily, prioritizing protein (1.6-2.2g/kg body weight) and healthy fats.'
+                });
+            } else {
+                recommendations.push({
+                    category: 'Nutrition',
+                    text: 'Maintain a balanced diet with 40% carbs, 30% protein, and 30% fats to support overall health and energy needs.'
+                });
+            }
+
+            // Activity level adjustments
+            if (activities < 3) {
+                recommendations.push({
+                    category: 'Activity Level',
+                    text: 'Gradually increase weekly exercise to 3-5 hours to boost metabolism and fitness.'
+                });
+            } else if (activities > 7) {
+                recommendations.push({
+                    category: 'Rest',
+                    text: 'Ensure at least 1-2 full rest days per week to prevent overtraining and promote recovery.'
+                });
+            }
+
+            // Personalized diet tweak based on user input (assuming diet is a string like 'vegan', 'keto', etc.)
+            if (diet) {
+                if (diet.toLowerCase() === 'vegan') {
+                    recommendations.push({
+                        category: 'Diet Tip',
+                        text: 'Supplement with B12 and ensure adequate plant-based protein sources like lentils and tofu.'
+                    });
+                } else if (diet.toLowerCase() === 'keto') {
+                    recommendations.push({
+                        category: 'Diet Tip',
+                        text: 'Monitor electrolyte intake (sodium, potassium, magnesium) to avoid keto flu symptoms.'
+                    });
+                }
+            }
+
+            // Render recommendations
+            recommendationsContainer.innerHTML = recommendations.map(item => `
+                <div class="recommendation-item">
+                    <strong>${item.category}:</strong> ${item.text}
+                </div>
+            `).join('');
+        }
+    </script>
+{% endblock %}
+
+{% block content2 %}
+
+{% endblock %}

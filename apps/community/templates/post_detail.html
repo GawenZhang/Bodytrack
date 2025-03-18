@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+
+{#css#}
+{% block head %}
+
+{% endblock %}
+
+{#内容#}
+{% block content %}
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.content }}</p>
+    <small>作者: {{ post.author }} | 发表于: {{ post.created_at }}</small>
+    <h3>评论</h3>
+    {% for comment in post.comments.all %}
+        <p>{{ comment.content }}</p>
+        <small>由 {{ comment.author }} 发表于 {{ comment.created_at }}</small>
+        <hr>
+    {% endfor %}
+    {% if user.is_authenticated %}
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="content" rows="4" cols="50" required></textarea><br>
+            <button type="submit">提交评论</button>
+        </form>
+    {% else %}
+        <p><a href="/register/login/">登录</a> 以发表评论</p>
+    {% endif %}
+    <a href="{% url 'post_list' %}">返回帖子列表</a>
+
+{% endblock %}
+
+{#js#}
+{% block js %}
+{% endblock %}
+

@@ -1,0 +1,192 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{#css#}
+{% block head %}
+    <title>profile</title>
+{#    <title>Profile</title>#}
+{#    <link rel="stylesheet" href="{% static '/css/LinkedIn-like-Profile-Box.css' %}">#}
+{#    <link rel="stylesheet" href="{% static '/css/Ludens-Users---2-Register.css' %}">#}
+{#    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee">#}
+{#    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900">#}
+{#    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">#}
+{#    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli">#}
+{##}
+{#    <style>#}
+{#        #services {#}
+{#            padding-bottom: 0px; /* 减少底部的内间距 */#}
+{#        }#}
+{#    </style>#}
+{##}
+{#{% endblock %}#}
+{##}
+{#内容#}
+{#{% block content2 %}#}
+{##}
+{##}
+{#    <section id="services" style="background: url('{% static "/img/header-bg.jpg" %}');">#}
+{#        <div class="container">#}
+{#            <section class="position-relative py-4 py-xl-5">#}
+{#                <div class="container">#}
+{#                    <div class="text-center border rounded-0 shadow-sm profile-box"#}
+{#                         style="width: 764px;height: 664px;background-color: #ffffff;margin: 275px;margin-top: 21px;padding-top: 30px;">#}
+{#                        <div style="height: 50px; background: url('{% static "/img/bg-pattern.png" %}'), rgb(129,83,214);"></div>#}
+{#                        <div><img class="rounded-circle" src="{% static 'img/bg-cta.jpg' %}" width="60px" height="60px"#}
+{#                                  style="background-color: rgb(255,255,255);padding: 2px;"></div>#}
+{#                        <div style="height: 80px;">#}
+{#                            <h4>Profile Name</h4>#}
+{#                            <p style="font-size: 12px;">Profile Description</p>#}
+{#                        </div>#}
+{#                        <p><label class="form-label">Username:&nbsp;&nbsp;</label>Gawen</p>#}
+{#                        <p><label class="form-label">Password:&nbsp;&nbsp;</label>Paragraph</p>#}
+{#                        <p><label class="form-label">Gender:&nbsp;&nbsp;</label>Male</p>#}
+{#                        <p><label class="form-label">Age:&nbsp;&nbsp;</label>19</p>#}
+{#                        <p><label class="form-label">Height:&nbsp;&nbsp;</label>180 cm</p>#}
+{#                        <p><label class="form-label">Weight:&nbsp;&nbsp;</label>60 kg</p>#}
+{#                        <p><label class="form-label">Email:&nbsp;&nbsp;</label>97575946@qq.com</p>#}
+{#                        <button class="btn btn-primary" type="button" style="width: 100px;height: 37px;">SAVE</button>#}
+{##}
+{##}
+{#                        <form action="/logout/" method="POST" style="display: inline;">#}
+{#                            {% csrf_token %}#}
+{#                            <button class="btn btn-primary" type="submit"#}
+{#                                    style="width: 100px; height: 37px; margin: 13px; background: #e76470;">LOGOUT#}
+{#                            </button>#}
+{#                        </form>#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{#            </section>#}
+{#        </div>#}
+{#    </section>#}
+
+
+    <section id="services" style="background: url('{% static "/img/header-bg.jpg" %}');">
+    <div class="container">
+        <section class="position-relative py-4 py-xl-5">
+            <div class="container">
+                <div class="text-center border rounded-0 shadow-sm profile-box"
+                     style="width: 764px;height: 664px;background-color: #ffffff;margin: 275px;margin-top: 21px;padding-top: 30px;">
+                    <div style="height: 50px; background: url('{% static "/img/../static/img/bg-pattern.png" %}'), rgb(129,83,214);"></div>
+                    <div><img class="rounded-circle" src="{% static 'img/bg-cta.jpg' %}" width="60px" height="60px"
+                              style="background-color: rgb(255,255,255);padding: 2px;" id="profile-img"></div>
+                    <div style="height: 80px;">
+                        <h4 id="profile-name">Profile Name</h4>
+                        <p style="font-size: 12px;" id="profile-description">Profile Description</p>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label class="form-label" for="username">Username:</label>
+                        <span id="username-display">Gawen</span>
+                        <div style="display: inline-block;">
+                            <input class="form-control" type="text" id="username" value="Gawen" style="display: none; width: 200px;" onchange="updateProfile('username')">
+                            <button type="button" class="btn btn-link" onclick="toggleEdit('username')">修改</button>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label class="form-label" for="password">Password:</label>
+                        <span id="password-display">Paragraph</span>
+                        <div style="display: inline-block;">
+                            <input class="form-control" type="password" id="password" value="Paragraph" style="display: none; width: 200px;" onchange="updateProfile('password')">
+                            <button type="button" class="btn btn-link" onclick="toggleEdit('password')">修改</button>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label class="form-label" for="gender">Gender:</label>
+                        <span id="gender-display">Male</span>
+                        <div style="display: inline-block;">
+                            <select class="form-control" id="gender" style="display: none; width: 200px;" onchange="updateProfile('gender')">
+                                <option value="Male" selected>Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <button type="button" class="btn btn-link" onclick="toggleEdit('gender')">修改</button>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label class="form-label" for="age">Age:</label>
+                        <span id="age-display">19</span>
+                        <div style="display: inline-block;">
+                            <input class="form-control" type="number" id="age" value="19" style="display: none; width: 200px;" onchange="updateProfile('age')">
+                            <button type="button" class="btn btn-link" onclick="toggleEdit('age')">修改</button>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label class="form-label" for="height">Height:</label>
+                        <span id="height-display">180 cm</span>
+                        <div style="display: inline-block;">
+                            <input class="form-control" type="text" id="height" value="180 cm" style="display: none; width: 200px;" onchange="updateProfile('height')">
+                            <button type="button" class="btn btn-link" onclick="toggleEdit('height')">修改</button>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label class="form-label" for="weight">Weight:</label>
+                        <span id="weight-display">60 kg</span>
+                        <div style="display: inline-block;">
+                            <input class="form-control" type="text" id="weight" value="60 kg" style="display: none; width: 200px;" onchange="updateProfile('weight')">
+                            <button type="button" class="btn btn-link" onclick="toggleEdit('weight')">修改</button>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label class="form-label" for="email">Email:</label>
+                        <span id="email-display">97575946@qq.com</span>
+                        <div style="display: inline-block;">
+                            <input class="form-control" type="email" id="email" value="97575946@qq.com" style="display: none; width: 200px;" onchange="updateProfile('email')">
+                            <button type="button" class="btn btn-link" onclick="toggleEdit('email')">修改</button>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" type="button" style="width: 100px;height: 37px;">SAVE</button>
+
+                    <form action="/logout/" method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <button class="btn btn-primary" type="submit"
+                                style="width: 100px; height: 37px; margin: 13px; background: #e76470;">LOGOUT
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+
+<script>
+    // 切换显示/编辑模式
+    function toggleEdit(field) {
+        var displayElement = document.getElementById(field + '-display');
+        var inputElement = document.getElementById(field);
+        var button = document.querySelector('[onclick="toggleEdit(\'' + field + '\')"]');
+
+        if (inputElement.style.display === 'none') {
+            displayElement.style.display = 'none';
+            inputElement.style.display = 'block';
+            button.innerText = '保存';
+        } else {
+            displayElement.style.display = 'block';
+            inputElement.style.display = 'none';
+            button.innerText = '修改';
+            updateProfile(field);  // 更新个人资料
+        }
+    }
+
+    // 更新个人资料信息
+    function updateProfile(field) {
+        let value = document.getElementById(field).value;
+
+        // 更新显示的内容
+        if (field !== 'password') {
+            document.getElementById(field + '-display').innerText = value;
+        }
+    }
+</script>
+
+
+
+
+
+
+{% endblock %}
+
+
+{#js#}
+{% block js %}
+{% endblock %}

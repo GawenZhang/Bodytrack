@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+
+{#css#}
+{% block head %}
+
+{% endblock %}
+
+{#内容#}
+{% block content %}
+    <h1>发布新帖子</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label>标题: <input type="text" name="title" required></label><br>
+        <label>内容: <textarea name="content" rows="6" cols="50" required></textarea></label><br>
+        <button type="submit">发布</button>
+    </form>
+    <a href="{% url 'post_list' %}">返回</a>
+
+{% endblock %}
+
+{#js#}
+{% block js %}
+{% endblock %}
+

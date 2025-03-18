@@ -1,0 +1,781 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+
+{#css#}
+{% block head %}
+    <title>社区模块</title>
+    <style>
+        /* Fitness Community Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: #FFF8DC;
+        }
+
+        .fitness-community-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 150px auto;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Top Banner */
+        .community-banner {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/api/placeholder/1200/300');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .banner-content {
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .banner-content h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .banner-content p {
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .join-btn {
+            background-color: #FFD700; /* Yellow theme color */
+            border: none;
+            color: #333; /* Darker text for readability on yellow */
+            padding: 12px 28px;
+            font-size: 1em;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .join-btn:hover {
+            background-color: #FFC800;
+        }
+
+        /* Main Content Layout */
+        .community-main-content {
+            display: grid;
+            grid-template-columns: 220px 1fr 280px;
+            gap: 25px;
+        }
+
+        /* Left Sidebar */
+        .community-left-sidebar {
+            grid-column: 1;
+        }
+
+        .sidebar-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        .sidebar-section h3 {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .topic-list, .category-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .topic-list li, .category-list li {
+            margin-bottom: 12px;
+        }
+
+        .topic-list a, .category-list a {
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            align-items: center;
+            font-size: 0.95em;
+            transition: color 0.2s;
+        }
+
+        .topic-list a:hover, .category-list a:hover {
+            color: #FFD700; /* Yellow for hover */
+        }
+
+        .topic-icon, .category-icon {
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        /* Middle Posts Area */
+        .community-posts {
+            grid-column: 2;
+        }
+
+        .posts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .posts-header h2 {
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        .posts-filter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #post-sort {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: white;
+        }
+
+        #new-post-btn {
+            background-color: #FFD700; /* Yellow theme color */
+            color: #333;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        #new-post-btn:hover {
+            background-color: #FFC800;
+        }
+
+        .post-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .author-avatar img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .author-info {
+            margin-left: 10px;
+        }
+
+        .author-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .post-time {
+            font-size: 0.8em;
+            color: #777;
+            margin-top: 2px;
+        }
+
+        .post-options {
+            color: #777;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+
+        .post-title h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .post-content {
+            font-size: 0.95em;
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .post-image {
+            margin-bottom: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .post-image img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .post-actions {
+            display: flex;
+            align-items: center;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .action-item {
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            color: #555;
+            cursor: pointer;
+        }
+
+        .action-icon {
+            margin-right: 6px;
+            font-size: 1.1em;
+        }
+
+        .load-more {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #load-more-btn {
+            background-color: white;
+            border: 1px solid #ddd;
+            color: #555;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.2s;
+        }
+
+        #load-more-btn:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Right Sidebar */
+        .community-right-sidebar {
+            grid-column: 3;
+        }
+
+        .community-stats {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 1.3em;
+            color: #FFD700; /* Yellow theme color */
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .community-events {
+            margin-bottom: 15px;
+        }
+
+        .event-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .event-date {
+            font-size: 0.8em;
+            color: #FFD700; /* Yellow theme color */
+            font-weight: 600;
+        }
+
+        .event-title {
+            font-size: 0.95em;
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .event-participants {
+            font-size: 0.8em;
+            color: #777;
+        }
+
+        .view-all-link {
+            display: block;
+            text-align: center;
+            color: #FFD700; /* Yellow theme color */
+            font-size: 0.9em;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+
+        .recommended-users {
+            margin-bottom: 10px;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .user-avatar img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            flex-grow: 1;
+            margin-left: 10px;
+        }
+
+        .user-name {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .user-desc {
+            font-size: 0.8em;
+            color: #777;
+        }
+
+        .follow-btn {
+            background-color: #f1f1f1;
+            border: none;
+            color: #555;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .follow-btn:hover {
+            background-color: #FFD700;
+            color: #333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .community-main-content {
+                grid-template-columns: 200px 1fr;
+            }
+
+            .community-right-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .community-main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .community-left-sidebar {
+                display: none;
+            }
+
+            .banner-content h1 {
+                font-size: 2em;
+            }
+
+            .banner-content p {
+                font-size: 1em;
+            }
+
+            .background {
+                background-image: url('{% static "img/background/pexels-kinkate-421160.jpg" %}');
+                background-size: cover; /* 确保背景图片覆盖整个元素 */
+                background-position: center center; /* 图片居中显示 */
+                background-repeat: no-repeat; /* 防止背景图片重复 */
+                height: 800px; /* 控制 header 高度 */
+                width: 100%; /* 宽度为 100% */
+            }
+        }
+    </style>
+{% endblock %}
+<h1>社区帖子</h1>
+
+{#内容#}
+{% block content %}
+    <!-- Main Content Start -->
+{#    <header class="background"#}
+{#            style="background-image: url('{% static "img/background/pexels-guihankenne-2792083.jpg" %}')">#}
+    <div class="fitness-community-container">
+        <!-- Top Banner -->
+        <div class="community-banner">
+            <div class="banner-content">
+                <h1>Fitness Community</h1>
+                <p>Share your fitness journey, get professional advice, and grow with like-minded fitness
+                    enthusiasts</p>
+                <button class="join-btn">Join Community</button>
+            </div>
+        </div>
+
+        <!-- Main Content Section -->
+        <div class="community-main-content">
+            <!-- Left - Hot Topics and Categories -->
+            <div class="community-left-sidebar">
+                <div class="sidebar-section">
+                    <h3>Trending Topics</h3>
+                    <ul class="topic-list">
+                        <li><a href="#"><span class="topic-icon">🔥</span> Scientific Muscle Building</a></li>
+                        <li><a href="#"><span class="topic-icon">🔥</span> Fat Loss Meal Planning</a></li>
+                        <li><a href="#"><span class="topic-icon">🔥</span> Home Workout Routines</a></li>
+                        <li><a href="#"><span class="topic-icon">🔥</span> Running Tips for Beginners</a></li>
+                        <li><a href="#"><span class="topic-icon">🔥</span> Gym Equipment Reviews</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <h3>Categories</h3>
+                    <ul class="category-list">
+                        <li><a href="#"><span class="category-icon">💪</span> Strength Training</a></li>
+                        <li><a href="#"><span class="category-icon">🏃</span> Cardio Workouts</a></li>
+                        <li><a href="#"><span class="category-icon">🥗</span> Nutrition & Diet</a></li>
+                        <li><a href="#"><span class="category-icon">⏱️</span> Training Programs</a></li>
+                        <li><a href="#"><span class="category-icon">🧘</span> Stretching & Recovery</a></li>
+                        <li><a href="#"><span class="category-icon">📝</span> Fitness Journaling</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Middle - Posts List -->
+            <div class="community-posts">
+                <div class="posts-header">
+                    <h2>Latest Posts</h2>
+                    <div class="posts-filter">
+                        <select id="post-sort">
+                            <option value="latest">Most Recent</option>
+                            <option value="popular">Most Popular</option>
+                            <option value="trending">Trending</option>
+                        </select>
+                        <button id="new-post-btn">Create Post</button>
+                    </div>
+                </div>
+
+                <div class="posts-list" id="posts-container">
+                    <!-- Example Post 1 -->
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-author">
+                                <div class="author-avatar">
+                                    <img src="/api/placeholder/50/50" alt="User Avatar">
+                                </div>
+                                <div class="author-info">
+                                    <div class="author-name">FitnessExpert</div>
+                                    <div class="post-time">March 15, 2025 · Strength Training</div>
+                                </div>
+                            </div>
+                            <div class="post-options">
+                                <span>⋮</span>
+                            </div>
+                        </div>
+                        <div class="post-title">
+                            <h3>How Beginners Should Perform Squats Correctly</h3>
+                        </div>
+                        <div class="post-content">
+                            <p>Squats are a fundamental compound exercise that significantly improves leg and core
+                                strength. Today I'd like to share how beginners can perform squats correctly while
+                                avoiding common mistakes...</p>
+                        </div>
+                        <div class="post-image">
+                            <img src="/api/placeholder/600/300" alt="Squat training image">
+                        </div>
+                        <div class="post-actions">
+                            <div class="action-item like-action">
+                                <span class="action-icon">👍</span>
+                                <span class="action-count">42</span>
+                            </div>
+                            <div class="action-item comment-action">
+                                <span class="action-icon">💬</span>
+                                <span class="action-count">18</span>
+                            </div>
+                            <div class="action-item share-action">
+                                <span class="action-icon">↗️</span>
+                                <span class="action-text">Share</span>
+                            </div>
+                            <div class="action-item save-action">
+                                <span class="action-icon">🔖</span>
+                                <span class="action-text">Save</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Example Post 2 -->
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-author">
+                                <div class="author-avatar">
+                                    <img src="/api/placeholder/50/50" alt="User Avatar">
+                                </div>
+                                <div class="author-info">
+                                    <div class="author-name">NutritionCoach</div>
+                                    <div class="post-time">March 16, 2025 · Nutrition & Diet</div>
+                                </div>
+                            </div>
+                            <div class="post-options">
+                                <span>⋮</span>
+                            </div>
+                        </div>
+                        <div class="post-title">
+                            <h3>Protein Intake for Muscle Growth: How Much Is Enough?</h3>
+                        </div>
+                        <div class="post-content">
+                            <p>There's been ongoing debate about optimal protein intake during bulking phases. Some say
+                                2g per kg of bodyweight, others claim 1.6g per kg is sufficient. Today let's analyze the
+                                science behind protein requirements for different training stages...</p>
+                        </div>
+                        <div class="post-actions">
+                            <div class="action-item like-action">
+                                <span class="action-icon">👍</span>
+                                <span class="action-count">35</span>
+                            </div>
+                            <div class="action-item comment-action">
+                                <span class="action-icon">💬</span>
+                                <span class="action-count">24</span>
+                            </div>
+                            <div class="action-item share-action">
+                                <span class="action-icon">↗️</span>
+                                <span class="action-text">Share</span>
+                            </div>
+                            <div class="action-item save-action">
+                                <span class="action-icon">🔖</span>
+                                <span class="action-text">Save</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Example Post 3 -->
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-author">
+                                <div class="author-avatar">
+                                    <img src="/api/placeholder/50/50" alt="User Avatar">
+                                </div>
+                                <div class="author-info">
+                                    <div class="author-name">RunningEnthusiast</div>
+                                    <div class="post-time">March 17, 2025 · Cardio Workouts</div>
+                                </div>
+                            </div>
+                            <div class="post-options">
+                                <span>⋮</span>
+                            </div>
+                        </div>
+                        <div class="post-title">
+                            <h3>My Zero-to-Half-Marathon Training Plan</h3>
+                        </div>
+                        <div class="post-content">
+                            <p>Six months ago, I couldn't run 2 miles without stopping. Now I've completed my first half
+                                marathon! I want to share my training plan and some insights that might help fellow
+                                runners who are looking to tackle longer distances...</p>
+                        </div>
+                        <div class="post-image">
+                            <img src="/api/placeholder/600/300" alt="Running training image">
+                        </div>
+                        <div class="post-actions">
+                            <div class="action-item like-action">
+                                <span class="action-icon">👍</span>
+                                <span class="action-count">51</span>
+                            </div>
+                            <div class="action-item comment-action">
+                                <span class="action-icon">💬</span>
+                                <span class="action-count">32</span>
+                            </div>
+                            <div class="action-item share-action">
+                                <span class="action-icon">↗️</span>
+                                <span class="action-text">Share</span>
+                            </div>
+                            <div class="action-item save-action">
+                                <span class="action-icon">🔖</span>
+                                <span class="action-text">Save</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="load-more">
+                    <button id="load-more-btn">Load More</button>
+                </div>
+            </div>
+
+            <!-- Right - Community Info and Activities -->
+            <div class="community-right-sidebar">
+                <div class="sidebar-section">
+                    <h3>Community Stats</h3>
+                    <div class="community-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">8,562</div>
+                            <div class="stat-label">Members</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">1,245</div>
+                            <div class="stat-label">Active Today</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">24,689</div>
+                            <div class="stat-label">Total Posts</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-section">
+                    <h3>Featured Events</h3>
+                    <div class="community-events">
+                        <div class="event-item">
+                            <div class="event-date">March 25</div>
+                            <div class="event-title">Online Boot Camp: 30-Day Abs Challenge</div>
+                            <div class="event-participants">152 participants</div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-date">April 1</div>
+                            <div class="event-title">Fitness Check-in Challenge</div>
+                            <div class="event-participants">89 participants</div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-date">April 15</div>
+                            <div class="event-title">Live Q&A with Nutrition Expert</div>
+                            <div class="event-participants">210 participants</div>
+                        </div>
+                    </div>
+                    <a href="#" class="view-all-link">View All Events</a>
+                </div>
+                <div class="sidebar-section">
+                    <h3>Recommended Users</h3>
+                    <div class="recommended-users">
+                        <div class="user-item">
+                            <div class="user-avatar">
+                                <img src="/api/placeholder/40/40" alt="User Avatar">
+                            </div>
+                            <div class="user-info">
+                                <div class="user-name">Coach Johnson</div>
+                                <div class="user-desc">10 years bodybuilding coach</div>
+                            </div>
+                            <button class="follow-btn">Follow</button>
+                        </div>
+                        <div class="user-item">
+                            <div class="user-avatar">
+                                <img src="/api/placeholder/40/40" alt="User Avatar">
+                            </div>
+                            <div class="user-info">
+                                <div class="user-name">WeightLossHero</div>
+                                <div class="user-desc">Lost 65 lbs in one year</div>
+                            </div>
+                            <button class="follow-btn">Follow</button>
+                        </div>
+                        <div class="user-item">
+                            <div class="user-avatar">
+                                <img src="/api/placeholder/40/40" alt="User Avatar">
+                            </div>
+                            <div class="user-info">
+                                <div class="user-name">Dr. Nutrition</div>
+                                <div class="user-desc">Registered Dietitian</div>
+                            </div>
+                            <button class="follow-btn">Follow</button>
+                        </div>
+                    </div>
+                    <a href="#" class="view-all-link">See More Recommendations</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{#    <header>#}
+{% endblock %}
+
+{#js#}
+{% block js %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Example feature: Like functionality
+            const likeActions = document.querySelectorAll('.like-action');
+
+            likeActions.forEach(action => {
+                action.addEventListener('click', function () {
+                    const countElement = this.querySelector('.action-count');
+                    let count = parseInt(countElement.textContent);
+
+                    if (!this.classList.contains('liked')) {
+                        count++;
+                        countElement.textContent = count;
+                        this.classList.add('liked');
+                        this.style.color = '#FFD700'; // Change to yellow when liked
+                    } else {
+                        count--;
+                        countElement.textContent = count;
+                        this.classList.remove('liked');
+                        this.style.color = '#555';
+                    }
+                });
+            });
+
+            // New post button event
+            document.getElementById('new-post-btn').addEventListener('click', function () {
+                alert('Create post feature coming soon!');
+            });
+
+            // Load more button event
+            document.getElementById('load-more-btn').addEventListener('click', function () {
+                this.textContent = 'Loading...';
+
+                // Simulate loading delay
+                setTimeout(() => {
+                    this.textContent = 'Load More';
+                    alert('All content loaded!');
+                }, 1000);
+            });
+
+            // Follow button event
+            const followButtons = document.querySelectorAll('.follow-btn');
+
+            followButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    if (this.textContent === 'Follow') {
+                        this.textContent = 'Following';
+                        this.style.backgroundColor = '#FFD700'; // Yellow when following
+                        this.style.color = '#333';
+                    } else {
+                        this.textContent = 'Follow';
+                        this.style.backgroundColor = '#f1f1f1';
+                        this.style.color = '#555';
+                    }
+                });
+            });
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,459 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block head %}
+    <title>Fitness Posture Analysis</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background-color: #FFF8DC;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container_track {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .upload-section {
+            background-color: #fffbeb;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 2px dashed #f9ca24;
+            transition: all 0.3s ease;
+        }
+
+        .upload-section:hover {
+            background-color: #fff8e1;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #f9ca24;
+            margin-bottom: 15px;
+        }
+
+        .upload-btn {
+            background-color: #f9ca24;
+            color: #333;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .upload-btn:hover {
+            background-color: #f0b90b;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .image-preview {
+            width: 48%;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-preview img {
+            width: 100%;
+            display: block;
+        }
+
+        .analysis-result {
+            width: 48%;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f9ca24;
+            color: #2c3e50;
+        }
+
+        .result-item {
+            margin-bottom: 15px;
+        }
+
+        .result-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .result-value {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #f9ca24;
+        }
+
+        .score-container {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .score-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .score-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #f9ca24;
+        }
+
+        .recommendations {
+            margin-top: 30px;
+        }
+
+        .recommendation-item {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .alert {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .alert-error {
+            background-color: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+
+        .alert-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #f9ca24;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 20px;
+            }
+
+            .preview-container {
+                flex-direction: column;
+            }
+
+            .image-preview, .analysis-result {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div style="width: 100%; height: 100px; background-color: transparent; border: 1px transparent;"></div>
+    <div class="container_track" style="margin-top: 200px;">
+        <h1 class="page-title">Fitness Posture Smart Analysis</h1>
+
+        <div class="upload-section" id="dropArea">
+            <div class="upload-icon">📷</div>
+            <h2>Upload Your Fitness Image</h2>
+            <p>Drag and drop an image here or click the button below to select a file</p>
+            <input type="file" id="fileInput" class="file-input" accept="image/*">
+            <button class="upload-btn" id="uploadBtn">Select Image</button>
+            <div class="alert alert-error" id="errorAlert">Upload failed. Please ensure the file is a valid image
+                format.
+            </div>
+        </div>
+
+        <div class="loading" id="loadingIndicator">
+            <div class="spinner"></div>
+            <p>Analyzing image, please wait...</p>
+        </div>
+
+        <div class="preview-container" id="resultContainer" style="display: none;">
+            <div class="image-preview">
+                <img id="previewImage" src="" alt="Fitness Posture Preview">
+            </div>
+            <div class="analysis-result">
+                <div class="result-title">Posture Analysis Results</div>
+
+                <div class="result-item">
+                    <div class="result-label">Posture Type</div>
+                    <div class="result-value" id="postureType">Squat</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">Keypoint Detection</div>
+                    <div class="result-value" id="keypoints">17 body keypoints detected</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">Posture Assessment</div>
+                    <div class="result-value" id="postureAssessment">Back straight, knees aligned, appropriate depth
+                    </div>
+                </div>
+
+                <div class="score-container">
+                    <div class="score-title">Overall Score</div>
+                    <div class="score-value" id="overallScore">85</div>
+                </div>
+
+                <div class="recommendations">
+                    <div class="result-title">Improvement Suggestions</div>
+                    <div class="recommendation-item" id="recommendation1">
+                        Try lowering hip position to increase squat depth
+                    </div>
+                    <div class="recommendation-item" id="recommendation2">
+                        Keep chest up to avoid forward trunk lean
+                    </div>
+                    <div class="recommendation-item" id="recommendation3">
+                        Ensure knees track in line with toes to prevent inward collapse
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{#    <header>#}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const dropArea = document.getElementById('dropArea');
+            const fileInput = document.getElementById('fileInput');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const errorAlert = document.getElementById('errorAlert');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const resultContainer = document.getElementById('resultContainer');
+            const previewImage = document.getElementById('previewImage');
+
+            // Trigger file selection when upload button is clicked
+            uploadBtn.addEventListener('click', function () {
+                fileInput.click();
+            });
+
+            // Handle file selection event
+            fileInput.addEventListener('change', handleFileSelect);
+
+            // Drag and drop related events
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                dropArea.style.backgroundColor = '#fff8e1';
+                dropArea.style.borderColor = '#f0b90b';
+            }
+
+            function unhighlight() {
+                dropArea.style.backgroundColor = '#fffbeb';
+                dropArea.style.borderColor = '#f9ca24';
+            }
+
+            // Handle dropped files
+            dropArea.addEventListener('drop', function (e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+
+                if (files.length) {
+                    handleFiles(files);
+                }
+            });
+
+            // Handle file selection
+            function handleFileSelect(e) {
+                const files = e.target.files;
+                if (files.length) {
+                    handleFiles(files);
+                }
+            }
+
+            // Process files
+            function handleFiles(files) {
+                const file = files[0];
+
+                // Check file type
+                if (!file.type.match('image.*')) {
+                    showError('Please upload a valid image file');
+                    return;
+                }
+
+                // Hide error message
+                errorAlert.style.display = 'none';
+
+                // Show loading indicator
+                loadingIndicator.style.display = 'block';
+
+                // Preview image
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+
+                    // Simulate analysis delay
+                    setTimeout(function () {
+                        // Hide loading indicator
+                        loadingIndicator.style.display = 'none';
+
+                        // Show results container
+                        resultContainer.style.display = 'flex';
+
+                        // Here you can add actual analysis logic
+                        // Currently using simulated data
+                        updateAnalysisResults(generateRandomAnalysis());
+                    }, 1500);
+                };
+                reader.readAsDataURL(file);
+            }
+
+            // Show error message
+            function showError(message) {
+                errorAlert.textContent = message;
+                errorAlert.style.display = 'block';
+            }
+
+            // Update analysis results
+            function updateAnalysisResults(results) {
+                document.getElementById('postureType').textContent = results.postureType;
+                document.getElementById('keypoints').textContent = results.keypoints;
+                document.getElementById('postureAssessment').textContent = results.postureAssessment;
+                document.getElementById('overallScore').textContent = results.overallScore;
+                document.getElementById('recommendation1').textContent = results.recommendations[0];
+                document.getElementById('recommendation2').textContent = results.recommendations[1];
+                document.getElementById('recommendation3').textContent = results.recommendations[2];
+
+                // Set color based on score
+                const scoreElement = document.getElementById('overallScore');
+                if (results.overallScore >= 80) {
+                    scoreElement.style.color = '#27ae60';
+                } else if (results.overallScore >= 60) {
+                    scoreElement.style.color = '#f39c12';
+                } else {
+                    scoreElement.style.color = '#e74c3c';
+                }
+            }
+
+            // Generate random analysis results (for demonstration only)
+            function generateRandomAnalysis() {
+                const postureTypes = ['Squat', 'Deadlift', 'Bench Press', 'Pull-up', 'Push-up', 'Lunge'];
+                const assessments = [
+                    'Back straight, knees aligned, appropriate depth',
+                    'Good posture overall, stability could be improved',
+                    'Correct overall form with minor issues',
+                    'Optimal joint angles, balanced posture',
+                    'Primary form correct, alignment needs adjustment'
+                ];
+                const recommendations = [
+                    'Try lowering hip position to increase squat depth',
+                    'Keep chest up to avoid forward trunk lean',
+                    'Ensure knees track in line with toes to prevent inward collapse',
+                    'Maintain core tension for better overall stability',
+                    'Keep shoulders retracted for improved upper back posture',
+                    'Increase hip mobility to improve range of motion',
+                    'Strengthen lower back to maintain proper form',
+                    'Adjust foot position to optimize force transfer',
+                    'Improve grip position to reduce wrist strain',
+                    'Mind neck position, keeping it aligned with spine'
+                ];
+
+                // Randomly select three different recommendations
+                const selectedRecommendations = [];
+                while (selectedRecommendations.length < 3) {
+                    const recommendation = recommendations[Math.floor(Math.random() * recommendations.length)];
+                    if (!selectedRecommendations.includes(recommendation)) {
+                        selectedRecommendations.push(recommendation);
+                    }
+                }
+
+                return {
+                    postureType: postureTypes[Math.floor(Math.random() * postureTypes.length)],
+                    keypoints: `${Math.floor(Math.random() * 5) + 15} body keypoints detected`,
+                    postureAssessment: assessments[Math.floor(Math.random() * assessments.length)],
+                    overallScore: Math.floor(Math.random() * 30) + 65, // Random number between 65-95
+                    recommendations: selectedRecommendations
+                };
+            }
+        });
+    </script>
+
+
+{% endblock %}
+
+{% block content2 %}
+
+{% endblock %}

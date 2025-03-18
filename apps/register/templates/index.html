@@ -1,0 +1,62 @@
+
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block head %}
+    <title>index</title>
+
+
+{% endblock %}
+
+
+
+{% block content %}
+
+    {#背景图#}
+<header class="masthead" style="background-image: url('{% static "img/header-bg.jpg" %}')">
+     <div class="container">
+        <div class="intro-text">
+            <div class="intro-lead-in"><span>Welcome To BodyTrack!</span></div>
+            <div class="intro-heading text-uppercase"><span>It's Nice To Meet You</span></div>
+            <a class="btn btn-primary btn-xl text-uppercase" role="button" href="#services">Start plan</a>
+        </div>
+    </div>
+</header>
+
+{% endblock %}
+
+{% block content2 %}
+<section id="services">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="text-uppercase section-heading">Services</h2>
+                <h3 class="text-muted section-subheading"><span style="color: var(--bs-secondary-color);">Your Fitness, Your Journey, Your BodyTrack</span>
+                </h3>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-4"><span class="fa-stack fa-4x"><i class="fa fa-circle fa-stack-2x text-primary"></i><i
+                    class="far fa-calendar-alt fa-stack-1x fa-inverse"></i></span>
+                <h4 class="section-heading">Plan</h4>
+                <p class="text-muted"><span style="color: rgb(19, 56, 23);">The system generates customized fitness plan based on users data (age, weight,</span><br><span
+                        style="color: rgb(19, 56, 23);">goals) and allows adjustments to meet individual needs</span>
+                </p>
+            </div>
+            <div class="col-md-4"><span class="fa-stack fa-4x"><i class="fa fa-circle fa-stack-2x text-primary"></i><i
+                    class="fa fa-bicycle fa-stack-1x fa-inverse"></i></span>
+                <h4 class="section-heading">Track</h4>
+                <p class="text-muted"><span style="color: rgb(19, 56, 23);">Users can upload exercise images for posture assessment, with the system providing</span><br><span
+                        style="color: rgb(19, 56, 23);">corrections using image recognition and machine learning</span>
+                </p>
+            </div>
+            <div class="col-md-4"><span class="fa-stack fa-4x"><i class="fa fa-circle fa-stack-2x text-primary"></i><i
+                    class="far fa-comments fa-stack-1x fa-inverse"></i></span>
+                <h4 class="section-heading">Web Security</h4>
+                <p class="text-muted"><span style="color: rgb(19, 56, 23);">A built-in community feature enables users to share progress, exchange</span><br><span
+                        style="color: rgb(19, 56, 23);">fitness tips, and support to each other</span></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
