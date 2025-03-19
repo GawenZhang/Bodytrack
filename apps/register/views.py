@@ -1,11 +1,11 @@
-from django.shortcuts import render, HttpResponse, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-import tensorflow as tf
 from django.shortcuts import render
-from django.http import JsonResponse
-import numpy as np
+from apps.community.models import Post
 
 
 # Create your views here.
@@ -58,77 +58,35 @@ def log_out(request):
     return redirect('/')  # 重定向到首页或登录页面
 
 
+@login_required
 def profile(request):
-    return render(request, 'profile.html')
+    user = request.user
+    posts = Post.objects.filter(author=user).order_by('-created_at')
 
+    # 计算统计数据
+    stats = {
+        'post_count': posts.count(),
+        'comments_count': sum(post.comments_count for post in posts),
+        'likes_received': sum(post.likes for post in posts),
+        'days_streak': 0,  # 如果没有 Profile，可以硬编码或从其他逻辑计算
+    }
 
-
-
-# 加载保存的模型
-
-from tensorflow.keras.models import load_model
-from tensorflow.keras import backend as K
-
-# 自定义损失函数
-from tensorflow.keras.models import load_model
-from tensorflow.keras import backend as K
-from tensorflow.keras.utils import get_custom_objects
-
-
-# # 自定义损失函数
-# def weighted_mse(y_true, y_pred):
-#     # 定义不同特征的权重
-#     age_weight = 0.1  # 减小年龄的权重
-#     height_weight = 1.0  # 保持身高的权重
-#     weight_weight = 1.0  # 保持体重的权重
-#
-#     # 计算每个特征的均方误差（MSE）
-#     age_mse = K.mean(K.square(y_true[:, 0] - y_pred[:, 0]))  # 年龄误差
-#     height_mse = K.mean(K.square(y_true[:, 1] - y_pred[:, 1]))  # 身高误差
-#     weight_mse = K.mean(K.square(y_true[:, 2] - y_pred[:, 2]))  # 体重误差
-#
-#     # 加权平均误差
-#     weighted_mse_value = (age_weight * age_mse + height_weight * height_mse + weight_weight * weight_mse) / (
-#                 age_weight + height_weight + weight_weight)
-#
-#     return weighted_mse_value
-#
-#
-# # 注册自定义损失函数
-# get_custom_objects()['weighted_mse'] = weighted_mse
-#
-# # 加载模型
-# model = load_model('E:/Workspace/BodyTrack/register/static/model/BMI_with_weighted_loss.h5')
-
-
-# 之后可以继续使用该模型进行预测等操作
-
-
-# 之后可以继续使用该模型进行预测等操作
+    context = {
+        'user': user,
+        'posts': posts,
+        'stats': stats,
+    }
+    return render(request, 'profile.html', context)
 
 
 def track(request):
-    # msg = ""
-    #
-    # if request.method == 'POST':
-    #     height = request.POST.get('height')
-    #     weight = request.POST.get('weight')
-    #     age = request.POST.get('age')
-    #
-    #     try:
-    #         if height and weight and age:
-    #             # 转换为适当的数值类型
-    #             height = float(height)
-    #             weight = float(weight)
-    #             age = int(age)
-    #
-    #             # 执行预测
-    #             bmi = model.predict([[height, weight, age]])
-    #             msg = f"Predicted BMI: {bmi[0][0]}"  # 假设返回值是二维数组，取第一个元素
-    #         else:
-    #             raise ValueError("Height, Weight, or Age is empty!")
-    #
-    #     except ValueError as e:
-    #         msg = f"Error: {e}"
-
     return render(request, 'track.html')
+
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id, author=request.user)
+    if request.method == 'POST':
+        post.delete()
+        return redirect('profile')
+    return redirect('profile')

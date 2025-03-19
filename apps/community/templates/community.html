@@ -435,8 +435,8 @@
 {#内容#}
 {% block content %}
     <!-- Main Content Start -->
-{#    <header class="background"#}
-{#            style="background-image: url('{% static "img/background/pexels-guihankenne-2792083.jpg" %}')">#}
+    {#    <header class="background"#}
+    {#            style="background-image: url('{% static "img/background/pexels-guihankenne-2792083.jpg" %}')">#}
     <div class="fitness-community-container">
         <!-- Top Banner -->
         <div class="community-banner">
@@ -455,22 +455,24 @@
                 <div class="sidebar-section">
                     <h3>Trending Topics</h3>
                     <ul class="topic-list">
-                        <li><a href="#"><span class="topic-icon">🔥</span> Scientific Muscle Building</a></li>
-                        <li><a href="#"><span class="topic-icon">🔥</span> Fat Loss Meal Planning</a></li>
-                        <li><a href="#"><span class="topic-icon">🔥</span> Home Workout Routines</a></li>
-                        <li><a href="#"><span class="topic-icon">🔥</span> Running Tips for Beginners</a></li>
-                        <li><a href="#"><span class="topic-icon">🔥</span> Gym Equipment Reviews</a></li>
+                        {% for topic in topics %}
+                            <li><a href="#"><span
+                                    class="topic-icon">{{ topic.icon|default:"🔥" }}</span> {{ topic.name }}</a></li>
+                        {% empty %}
+                            <li>No trending topics yet.</li>
+                        {% endfor %}
                     </ul>
                 </div>
                 <div class="sidebar-section">
                     <h3>Categories</h3>
                     <ul class="category-list">
-                        <li><a href="#"><span class="category-icon">💪</span> Strength Training</a></li>
-                        <li><a href="#"><span class="category-icon">🏃</span> Cardio Workouts</a></li>
-                        <li><a href="#"><span class="category-icon">🥗</span> Nutrition & Diet</a></li>
-                        <li><a href="#"><span class="category-icon">⏱️</span> Training Programs</a></li>
-                        <li><a href="#"><span class="category-icon">🧘</span> Stretching & Recovery</a></li>
-                        <li><a href="#"><span class="category-icon">📝</span> Fitness Journaling</a></li>
+                        {% for category in categories %}
+                            <li><a href="#"><span
+                                    class="category-icon">{{ category.icon|default:"💪" }}</span> {{ category.name }}</a>
+                            </li>
+                        {% empty %}
+                            <li>No categories available.</li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
@@ -490,147 +492,71 @@
                 </div>
 
                 <div class="posts-list" id="posts-container">
-                    <!-- Example Post 1 -->
-                    <div class="post-card">
-                        <div class="post-header">
-                            <div class="post-author">
-                                <div class="author-avatar">
-                                    <img src="/api/placeholder/50/50" alt="User Avatar">
-                                </div>
-                                <div class="author-info">
-                                    <div class="author-name">FitnessExpert</div>
-                                    <div class="post-time">March 15, 2025 · Strength Training</div>
-                                </div>
-                            </div>
-                            <div class="post-options">
-                                <span>⋮</span>
-                            </div>
-                        </div>
-                        <div class="post-title">
-                            <h3>How Beginners Should Perform Squats Correctly</h3>
-                        </div>
-                        <div class="post-content">
-                            <p>Squats are a fundamental compound exercise that significantly improves leg and core
-                                strength. Today I'd like to share how beginners can perform squats correctly while
-                                avoiding common mistakes...</p>
-                        </div>
-                        <div class="post-image">
-                            <img src="/api/placeholder/600/300" alt="Squat training image">
-                        </div>
-                        <div class="post-actions">
-                            <div class="action-item like-action">
-                                <span class="action-icon">👍</span>
-                                <span class="action-count">42</span>
-                            </div>
-                            <div class="action-item comment-action">
-                                <span class="action-icon">💬</span>
-                                <span class="action-count">18</span>
-                            </div>
-                            <div class="action-item share-action">
-                                <span class="action-icon">↗️</span>
-                                <span class="action-text">Share</span>
-                            </div>
-                            <div class="action-item save-action">
-                                <span class="action-icon">🔖</span>
-                                <span class="action-text">Save</span>
-                            </div>
-                        </div>
-                    </div>
+                    {% for post in posts %}
+                        <div class="post-card">
+                            <div class="post-header">
+                                <div class="post-author">
+                                    <div class="author-avatar">
+                                        <img src="
 
-                    <!-- Example Post 2 -->
-                    <div class="post-card">
-                        <div class="post-header">
-                            <div class="post-author">
-                                <div class="author-avatar">
-                                    <img src="/api/placeholder/50/50" alt="User Avatar">
-                                </div>
-                                <div class="author-info">
-                                    <div class="author-name">NutritionCoach</div>
-                                    <div class="post-time">March 16, 2025 · Nutrition & Diet</div>
-                                </div>
-                            </div>
-                            <div class="post-options">
-                                <span>⋮</span>
-                            </div>
-                        </div>
-                        <div class="post-title">
-                            <h3>Protein Intake for Muscle Growth: How Much Is Enough?</h3>
-                        </div>
-                        <div class="post-content">
-                            <p>There's been ongoing debate about optimal protein intake during bulking phases. Some say
-                                2g per kg of bodyweight, others claim 1.6g per kg is sufficient. Today let's analyze the
-                                science behind protein requirements for different training stages...</p>
-                        </div>
-                        <div class="post-actions">
-                            <div class="action-item like-action">
-                                <span class="action-icon">👍</span>
-                                <span class="action-count">35</span>
-                            </div>
-                            <div class="action-item comment-action">
-                                <span class="action-icon">💬</span>
-                                <span class="action-count">24</span>
-                            </div>
-                            <div class="action-item share-action">
-                                <span class="action-icon">↗️</span>
-                                <span class="action-text">Share</span>
-                            </div>
-                            <div class="action-item save-action">
-                                <span class="action-icon">🔖</span>
-                                <span class="action-text">Save</span>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Example Post 3 -->
-                    <div class="post-card">
-                        <div class="post-header">
-                            <div class="post-author">
-                                <div class="author-avatar">
-                                    <img src="/api/placeholder/50/50" alt="User Avatar">
+
+
+
+
+
+                                                {% if post.author.profile.image %}{{ post.author.profile.image.url }}{% else %}/api/placeholder/50/50{% endif %}"
+                                             alt="User Avatar">
+                                    </div>
+                                    <div class="author-info">
+                                        <div class="author-name">{{ post.author.username }}</div>
+                                        <div class="post-time">{{ post.created_at|date:"F j, Y" }}
+                                            · {{ post.category.name|default:"Uncategorized" }}</div>
+                                    </div>
                                 </div>
-                                <div class="author-info">
-                                    <div class="author-name">RunningEnthusiast</div>
-                                    <div class="post-time">March 17, 2025 · Cardio Workouts</div>
+                                <div class="post-options">
+                                    <span>⋮</span>
                                 </div>
                             </div>
-                            <div class="post-options">
-                                <span>⋮</span>
+                            <div class="post-title">
+                                <h3><a href="/community/post/{{ post.id }}/">{{ post.title }}</a></h3>
+                            </div>
+                            <div class="post-content">
+                                <p>{{ post.content|truncatewords:30 }}</p>
+                            </div>
+                            {% if post.image %}
+                                <div class="post-image">
+                                    <img src="{{ post.image.url }}" alt="{{ post.title }} image">
+                                </div>
+                            {% endif %}
+                            <div class="post-actions">
+                                <div class="action-item like-action" data-post-id="{{ post.id }}">
+                                    <span class="action-icon">👍</span>
+                                    <span class="action-count">{{ post.likes }}</span>
+                                </div>
+                                <div class="action-item comment-action">
+                                    <span class="action-icon">💬</span>
+                                    <span class="action-count">{{ post.comments_count }}</span>
+                                </div>
+                                <div class="action-item share-action">
+                                    <span class="action-icon">↗️</span>
+                                    <span class="action-text">Share</span>
+                                </div>
+                                <div class="action-item save-action">
+                                    <span class="action-icon">🔖</span>
+                                    <span class="action-text">Save</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="post-title">
-                            <h3>My Zero-to-Half-Marathon Training Plan</h3>
-                        </div>
-                        <div class="post-content">
-                            <p>Six months ago, I couldn't run 2 miles without stopping. Now I've completed my first half
-                                marathon! I want to share my training plan and some insights that might help fellow
-                                runners who are looking to tackle longer distances...</p>
-                        </div>
-                        <div class="post-image">
-                            <img src="/api/placeholder/600/300" alt="Running training image">
-                        </div>
-                        <div class="post-actions">
-                            <div class="action-item like-action">
-                                <span class="action-icon">👍</span>
-                                <span class="action-count">51</span>
-                            </div>
-                            <div class="action-item comment-action">
-                                <span class="action-icon">💬</span>
-                                <span class="action-count">32</span>
-                            </div>
-                            <div class="action-item share-action">
-                                <span class="action-icon">↗️</span>
-                                <span class="action-text">Share</span>
-                            </div>
-                            <div class="action-item save-action">
-                                <span class="action-icon">🔖</span>
-                                <span class="action-text">Save</span>
-                            </div>
-                        </div>
-                    </div>
+                    {% empty %}
+                        <p>No posts available yet.</p>
+                    {% endfor %}
                 </div>
 
                 <div class="load-more">
-                    <button id="load-more-btn">Load More</button>
+                    {% if posts.has_next %}
+                        <button id="load-more-btn" data-next-page="{{ posts.next_page_number }}">Load More</button>
+                    {% endif %}
                 </div>
             </div>
 
@@ -640,80 +566,62 @@
                     <h3>Community Stats</h3>
                     <div class="community-stats">
                         <div class="stat-item">
-                            <div class="stat-value">8,562</div>
+                            <div class="stat-value">{{ stats.members }}</div>
                             <div class="stat-label">Members</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">1,245</div>
+                            <div class="stat-value">{{ stats.active_today }}</div>
                             <div class="stat-label">Active Today</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">24,689</div>
+                            <div class="stat-value">{{ stats.total_posts }}</div>
                             <div class="stat-label">Total Posts</div>
                         </div>
                     </div>
                 </div>
+
                 <div class="sidebar-section">
                     <h3>Featured Events</h3>
                     <div class="community-events">
-                        <div class="event-item">
-                            <div class="event-date">March 25</div>
-                            <div class="event-title">Online Boot Camp: 30-Day Abs Challenge</div>
-                            <div class="event-participants">152 participants</div>
-                        </div>
-                        <div class="event-item">
-                            <div class="event-date">April 1</div>
-                            <div class="event-title">Fitness Check-in Challenge</div>
-                            <div class="event-participants">89 participants</div>
-                        </div>
-                        <div class="event-item">
-                            <div class="event-date">April 15</div>
-                            <div class="event-title">Live Q&A with Nutrition Expert</div>
-                            <div class="event-participants">210 participants</div>
-                        </div>
+                        {% for event in events %}
+                            <div class="event-item">
+                                <div class="event-date">{{ event.date|date:"F j" }}</div>
+                                <div class="event-title">{{ event.title }}</div>
+                                <div class="event-participants">{{ event.participants }} participants</div>
+                            </div>
+                        {% empty %}
+                            <p>No upcoming events.</p>
+                        {% endfor %}
                     </div>
                     <a href="#" class="view-all-link">View All Events</a>
                 </div>
                 <div class="sidebar-section">
                     <h3>Recommended Users</h3>
                     <div class="recommended-users">
-                        <div class="user-item">
-                            <div class="user-avatar">
-                                <img src="/api/placeholder/40/40" alt="User Avatar">
+                        {% for user in recommended_users %}
+                            <div class="user-item">
+                                <div class="user-avatar">
+                                    <img src="
+
+                                            {% if user.profile.image %}{{ user.profile.image.url }}{% else %}/api/placeholder/40/40{% endif %}"
+                                         alt="User Avatar">
+                                </div>
+                                <div class="user-info">
+                                    <div class="user-name">{{ user.username }}</div>
+                                    <div class="user-desc">{{ user.profile.bio|default:"No description" }}</div>
+                                </div>
+                                <button class="follow-btn" data-user-id="{{ user.id }}">Follow</button>
                             </div>
-                            <div class="user-info">
-                                <div class="user-name">Coach Johnson</div>
-                                <div class="user-desc">10 years bodybuilding coach</div>
-                            </div>
-                            <button class="follow-btn">Follow</button>
-                        </div>
-                        <div class="user-item">
-                            <div class="user-avatar">
-                                <img src="/api/placeholder/40/40" alt="User Avatar">
-                            </div>
-                            <div class="user-info">
-                                <div class="user-name">WeightLossHero</div>
-                                <div class="user-desc">Lost 65 lbs in one year</div>
-                            </div>
-                            <button class="follow-btn">Follow</button>
-                        </div>
-                        <div class="user-item">
-                            <div class="user-avatar">
-                                <img src="/api/placeholder/40/40" alt="User Avatar">
-                            </div>
-                            <div class="user-info">
-                                <div class="user-name">Dr. Nutrition</div>
-                                <div class="user-desc">Registered Dietitian</div>
-                            </div>
-                            <button class="follow-btn">Follow</button>
-                        </div>
+                        {% empty %}
+                            <p>No recommended users yet.</p>
+                        {% endfor %}
                     </div>
                     <a href="#" class="view-all-link">See More Recommendations</a>
                 </div>
             </div>
         </div>
     </div>
-{#    <header>#}
+    {#    <header>#}
 {% endblock %}
 
 {#js#}
@@ -721,59 +629,89 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Example feature: Like functionality
+            // Like functionality
             const likeActions = document.querySelectorAll('.like-action');
-
             likeActions.forEach(action => {
                 action.addEventListener('click', function () {
-                    const countElement = this.querySelector('.action-count');
-                    let count = parseInt(countElement.textContent);
-
-                    if (!this.classList.contains('liked')) {
-                        count++;
-                        countElement.textContent = count;
-                        this.classList.add('liked');
-                        this.style.color = '#FFD700'; // Change to yellow when liked
-                    } else {
-                        count--;
-                        countElement.textContent = count;
-                        this.classList.remove('liked');
-                        this.style.color = '#555';
-                    }
+                    const postId = this.dataset.postId;
+                    fetch(`/community/like/${postId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            const countElement = this.querySelector('.action-count');
+                            countElement.textContent = data.likes;
+                            this.classList.toggle('liked');
+                            this.style.color = this.classList.contains('liked') ? '#FFD700' : '#555';
+                        })
+                        .catch(error => console.error('Error:', error));
                 });
             });
 
-            // New post button event
+            // New post button
             document.getElementById('new-post-btn').addEventListener('click', function () {
-                alert('Create post feature coming soon!');
+                window.location.href = "/community/create_post/";
             });
 
-            // Load more button event
-            document.getElementById('load-more-btn').addEventListener('click', function () {
-                this.textContent = 'Loading...';
+            // Load more posts
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            if (loadMoreBtn) {
+                loadMoreBtn.addEventListener('click', function () {
+                    const nextPage = this.dataset.nextPage;
+                    this.textContent = 'Loading...';
+                    fetch(`?page=${nextPage}`)
+                        .then(response => response.text())
+                        .then(html => {
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const newPosts = doc.querySelector('#posts-container').innerHTML;
+                            document.getElementById('posts-container').innerHTML += newPosts;
+                            const newBtn = doc.querySelector('#load-more-btn');
+                            if (newBtn) {
+                                this.dataset.nextPage = newBtn.dataset.nextPage;
+                                this.textContent = 'Load More';
+                            } else {
+                                this.remove();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            this.textContent = 'Load More';
+                        });
+                });
+            }
 
-                // Simulate loading delay
-                setTimeout(() => {
-                    this.textContent = 'Load More';
-                    alert('All content loaded!');
-                }, 1000);
-            });
-
-            // Follow button event
+            // Follow button
             const followButtons = document.querySelectorAll('.follow-btn');
-
             followButtons.forEach(button => {
                 button.addEventListener('click', function () {
-                    if (this.textContent === 'Follow') {
-                        this.textContent = 'Following';
-                        this.style.backgroundColor = '#FFD700'; // Yellow when following
-                        this.style.color = '#333';
-                    } else {
-                        this.textContent = 'Follow';
-                        this.style.backgroundColor = '#f1f1f1';
-                        this.style.color = '#555';
-                    }
+                    const userId = this.dataset.userId;
+                    fetch(`/community/follow/${userId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            this.textContent = data.status === 'followed' ? 'Following' : 'Follow';
+                            this.style.backgroundColor = data.status === 'followed' ? '#FFD700' : '#f1f1f1';
+                            this.style.color = data.status === 'followed' ? '#333' : '#555';
+                        })
+                        .catch(error => console.error('Error:', error));
                 });
+            });
+
+            // Post sorting
+            const postSort = document.getElementById('post-sort');
+            postSort.addEventListener('change', function () {
+                const sortValue = this.value;
+                window.location.href = `?sort=${sortValue}`;
             });
         });
     </script>
