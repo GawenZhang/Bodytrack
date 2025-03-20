@@ -3,7 +3,8 @@ from django.contrib import messages
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout as auth_logout
 from django.shortcuts import render
 from apps.community.models import Post
 
@@ -53,10 +54,14 @@ def register(request):
 
 
 # 登出
-def log_out(request):
-    logout(request)  # 清除用户会话信息
-    return redirect('/')  # 重定向到首页或登录页面
+# def log_out(request):
+#     logout(request)  # 清除用户会话信息
+#     return redirect('/')  # 重定向到首页或登录页面
 
+def log_out(request):
+    print("Logout view called")  # 调试信息
+    auth_logout(request)
+    return redirect('/')
 
 @login_required
 def profile(request):
@@ -88,5 +93,5 @@ def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id, author=request.user)
     if request.method == 'POST':
         post.delete()
-        return redirect('profile')
-    return redirect('profile')
+        return redirect('register:profile')  # 包含命名空间
+    return redirect('register:profile')  # 包含命名空间

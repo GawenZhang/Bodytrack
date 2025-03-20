@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block head %}
@@ -69,20 +69,6 @@
             border-radius: 8px;
         }
 
-        .user-info-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .user-info-label {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .user-info-value {
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
 
         .metrics-grid {
             display: grid;
@@ -178,18 +164,6 @@
             padding: 1.5rem;
             border-radius: 8px;
             margin-top: 2rem;
-        }
-
-        .recommendation-item {
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .recommendation-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
         }
 
         .button-container {

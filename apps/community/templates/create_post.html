@@ -1,10 +1,10 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 
 {#css#}
 {% block head %}
-    <title>FitLife - Create New Post</title>
+    <title>Create New Post</title>
     <style>
         * {
             padding: 0;
@@ -102,57 +102,6 @@
             margin-bottom: 15px;
         }
 
-        .tag-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .tag {
-            background-color: #fff5cc;
-            border: 1px solid #ffcc00;
-            color: #333;
-            padding: 6px 12px;
-            border-radius: 20px;
-            display: inline-flex;
-            align-items: center;
-            font-size: 0.9rem;
-        }
-
-        .tag-close {
-            margin-left: 6px;
-            font-size: 1.1rem;
-            line-height: 0.8;
-            cursor: pointer;
-        }
-
-        .add-tag {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .tag-input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .tag-button {
-            background-color: #ffcc00;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .tag-button:hover {
-            background-color: #e6b800;
-        }
 
         .form-submit {
             background-color: #ffcc00;
@@ -174,44 +123,6 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .preview-option {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .preview-button {
-            background: none;
-            border: 2px solid #ffcc00;
-            color: #333;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .preview-button:hover {
-            background-color: #fff5cc;
-        }
-
-        .formatting-tips {
-            background-color: #fff5cc;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 40px;
-        }
-
-        .formatting-title {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            color: #333;
-            font-weight: bold;
-        }
-
-        .formatting-list {
-            margin-left: 20px;
-        }
-
         .formatting-list li {
             margin-bottom: 8px;
             color: #666;
@@ -231,88 +142,6 @@
 
 {#内容#}
 {% block content %}
-    {#    <section class="create-post">#}
-    {#        <div class="create-post-container">#}
-    {#            <h2 class="section-title">Create a New Post</h2>#}
-    {#            <p class="post-description">Share your fitness journey, ask questions, or provide tips to help others in our#}
-    {#                community!</p>#}
-    {##}
-    {#            <div class="form-container">#}
-    {#                <form id="post-form" method="POST" action="{% url 'create_post' %}" enctype="multipart/form-data">#}
-    {#                    {% csrf_token %}#}
-    {#                    <div class="form-group">#}
-    {#                        <label class="form-label">Post Title</label>#}
-    {#                        <input type="text" class="form-input" id="post-title"#}
-    {#                               placeholder="Enter an eye-catching title for your post" required>#}
-    {#                    </div>#}
-    {##}
-    {#                    <div class="form-group">#}
-    {#                        <label class="form-label">Category</label>#}
-    {#                        <select class="form-select" id="post-category" required>#}
-    {#                            <option value="">Please select</option>#}
-    {#                            <option value="success-story">Success Story</option>#}
-    {#                            <option value="workout-routine">Workout Routine</option>#}
-    {#                            <option value="nutrition">Nutrition & Diet</option>#}
-    {#                            <option value="question">Question</option>#}
-    {#                            <option value="motivation">Motivation</option>#}
-    {#                            <option value="tips">Fitness Tips</option>#}
-    {#                        </select>#}
-    {#                    </div>#}
-    {##}
-    {#                    <div class="form-group">#}
-    {#                        <label class="form-label">Post Content</label>#}
-    {#                        <textarea class="form-textarea" id="post-content"#}
-    {#                                  placeholder="Share your thoughts, experiences, or questions here..."#}
-    {#                                  required></textarea>#}
-    {#                    </div>#}
-    {##}
-    {#                    <div class="form-group">#}
-    {#                        <label class="form-label">Upload Images (Optional)</label>#}
-    {#                        <div class="upload-container">#}
-    {#                            <div class="upload-icon">🖼️</div>#}
-    {#                            <p>Click to upload images or drag and drop here</p>#}
-    {#                            <p style="font-size: 0.8rem; color: #999; margin-top: 10px;">Up to 5 images, JPG or PNG#}
-    {#                                format, max 5MB each</p>#}
-    {#                        </div>#}
-    {#                    </div>#}
-    {##}
-    {#                    <div class="form-group">#}
-    {#                        <label class="form-label">Tags</label>#}
-    {#                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">Add relevant tags to help others#}
-    {#                            find your post</p>#}
-    {##}
-    {#                        <div class="tag-container">#}
-    {#                            <span class="tag">weight loss <span class="tag-close">×</span></span>#}
-    {#                            <span class="tag">motivation <span class="tag-close">×</span></span>#}
-    {#                        </div>#}
-    {##}
-    {#                        <div class="add-tag">#}
-    {#                            <input type="text" class="tag-input" placeholder="Add a new tag">#}
-    {#                            <button type="button" class="tag-button">Add</button>#}
-    {#                        </div>#}
-    {#                    </div>#}
-    {##}
-    {#                    <button type="submit" class="form-submit">Publish Post</button>#}
-    {##}
-    {#                    <div class="preview-option">#}
-    {#                        <button type="button" class="preview-button">Preview Post</button>#}
-    {#                    </div>#}
-    {#                </form>#}
-    {#            </div>#}
-    {##}
-    {#            <div class="formatting-tips">#}
-    {#                <h3 class="formatting-title">Formatting Tips</h3>#}
-    {#                <ul class="formatting-list">#}
-    {#                    <li>Use <strong>**bold**</strong> for important points and <em>*italics*</em> for emphasis</li>#}
-    {#                    <li>Create bulleted lists with * at the beginning of each line</li>#}
-    {#                    <li>Share your specific stats and measurements for more helpful feedback</li>#}
-    {#                    <li>Be respectful and supportive of other community members</li>#}
-    {#                    <li>Add before/after photos to showcase your progress (ensure they meet community guidelines)</li>#}
-    {#                </ul>#}
-    {#            </div>#}
-    {#        </div>#}
-    {#    </section>#}
-
    <section class="create-post">
         <div class="create-post-container">
             <h2 class="section-title">Create a New Post</h2>

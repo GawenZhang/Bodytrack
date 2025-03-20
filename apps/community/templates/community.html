@@ -1,10 +1,10 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 
 {#css#}
 {% block head %}
-    <title>社区模块</title>
+    <title>Community</title>
     <style>
         /* Fitness Community Styles */
         body {
@@ -25,7 +25,7 @@
 
         /* Top Banner */
         .community-banner {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/api/placeholder/1200/300');
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),url('{% static "img/background/pexels-pixabay-248547.jpg" %}');
             background-size: cover;
             background-position: center;
             color: white;
@@ -499,12 +499,6 @@
                                     <div class="author-avatar">
                                         <img src="
 
-
-
-
-
-
-
                                                 {% if post.author.profile.image %}{{ post.author.profile.image.url }}{% else %}/api/placeholder/50/50{% endif %}"
                                              alt="User Avatar">
                                     </div>
@@ -603,6 +597,7 @@
                                 <div class="user-avatar">
                                     <img src="
 
+
                                             {% if user.profile.image %}{{ user.profile.image.url }}{% else %}/api/placeholder/40/40{% endif %}"
                                          alt="User Avatar">
                                 </div>
@@ -653,9 +648,22 @@
             });
 
             // New post button
-            document.getElementById('new-post-btn').addEventListener('click', function () {
+            //document.getElementById('new-post-btn').addEventListener('click', function () {
+            //    window.location.href = "/community/create_post/";
+            //});
+
+            // 修改后的 New post button
+            document.getElementById('new-post-btn').addEventListener('click', function (e) {
+                const isLoggedIn = window.isLoggedIn; // 从模板中获取
+
+                if (!isLoggedIn) {
+                    e.preventDefault();
+                    alert('Please Login！');
+                    return;
+                }
                 window.location.href = "/community/create_post/";
             });
+
 
             // Load more posts
             const loadMoreBtn = document.getElementById('load-more-btn');

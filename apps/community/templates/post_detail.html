@@ -1,10 +1,10 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 
 {#css#}
 {% block head %}
-    <title>FitLife - My Weight Loss Journey</title>
+    <title>POST</title>
     <style>
         * {
             margin: 0;
@@ -380,61 +380,6 @@
             background-color: #fff5cc;
         }
 
-        .related-posts {
-            margin-top: 60px;
-        }
-
-        .post-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
-        .related-card {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .related-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .related-image {
-            height: 180px;
-            width: 100%;
-            object-fit: cover;
-        }
-
-        .related-content {
-            padding: 20px;
-        }
-
-        .related-title {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            color: #333;
-            font-weight: bold;
-        }
-
-        .related-excerpt {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 15px;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .related-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: #999;
-        }
 
         @media (max-width: 768px) {
             .post-title {
